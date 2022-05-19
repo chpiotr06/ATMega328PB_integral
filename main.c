@@ -16,7 +16,7 @@
 
 volatile int option = 1;
 
-/* !!! In this place you should write function from which you want to calculate integral!!! */
+/* !!! In this place you should write function from which you want to calculate integral !!! */
 float calculateFunction(float x) {
 	return 2*x*x + x + 1;
 }
@@ -111,7 +111,7 @@ void displayFloat(float number){
 		number *= -1;
 	}
 	
-	if(number > 9999.9) {
+	if(number > 99999.9) {
 		displayError();
 	}
 	

@@ -1,4 +1,4 @@
-*.cproj
+.cproj
 
-*.xml
-*./Debug
+.xml
+Debug/
