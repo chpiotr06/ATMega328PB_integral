@@ -49,7 +49,7 @@ int main(void){
 	while (1){
 		
 		
-		displayFloat(parabolicalInt);
+		displayFloat(1.123);
 		/*
 		if (oldOption != option)
 		{
@@ -106,9 +106,8 @@ float parabolicalIntegral(float lowBound, float highBound){
 }
 
 void displayFloat(float number){
-	int numberCpy;
-	if (number < 0){
-		numberCpy = number;
+	float numberCpy = number;
+	if (number < 0.000){
 		number *= -1;
 	}
 	
@@ -145,7 +144,7 @@ void displayFloat(float number){
 	}
 	
 	while(1){
-		if (numberCpy > 0){
+		if (numberCpy > 0.0){
 			for (int i=0; i<50; i++){
 				displayOneDigit(digitsToDisplay[currentIter], 0b00001000);
 				displayOneDigit(digitsToDisplay[currentIter + 1], 0b00000100);
