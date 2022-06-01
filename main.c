@@ -4,7 +4,7 @@
  * Created: 17.05.2022 13:27:39
  * Author : Piotr Chmielowiec, Dominik Budzynsky
  */ 
-#define F_CPU 8000000UL
+#define F_CPU 16000000UL
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -15,6 +15,27 @@
 #define pi 3.14159265359
 
 volatile int option = 1;
+volatile int hasInterrupted = 0;
+ISR(PCINT1_vect){
+	volatile int pincData = PINC;
+	hasInterrupted = 1;
+	for (int i=0; i<10; i++){
+		displayOneDigit(0x01, 0b00001000);
+		displayOneDigit(0x01, 0b00000100);
+		displayOneDigit(0x01, 0b00000010);
+		displayOneDigit(0x01, 0b00000001);
+	}
+	if(pincData==119){
+		option = 1;
+	}else if(pincData==123){
+		option = 2;
+	} else if(pincData==125){
+		option = 3;
+	}
+	
+}
+
+
 
 /* !!! In this place you should write function from which you want to calculate integral !!! */
 float calculateFunction(float x) {
@@ -47,10 +68,10 @@ int main(void){
 	
 	
 	while (1){
+		float integral = rectangleIntegral(lowerBound, upperBound, dx);
+		int oldOption = 1;
 		
 		
-		displayFloat(1.123);
-		/*
 		if (oldOption != option)
 		{
 			oldOption = option;
@@ -63,7 +84,7 @@ int main(void){
 				integral = parabolicalIntegral(lowerBound, upperBound);
 			}
 		}
-		displayFloat(integral);*/
+		displayFloat(integral);
 	}
 	
 	
@@ -75,6 +96,10 @@ void initialize(){
 	DDRB=0xff;
 	DDRC=0x00;
 	PORTC=0xff;
+	
+	PCMSK1=(1<<1)|(1<<2)|(1<<3);
+	PCICR=1<<1;
+	sei();
 }
 
 float trapezoidalIntegral(float lowBound, float highBound, float dx){
@@ -141,6 +166,10 @@ void displayFloat(float number){
 				digitsToDisplay[i] = (0b10000000 | digitsToDisplay[i]);
 			}
 		}
+		if(hasInterrupted){
+			break;
+		}
+		
 	}
 	
 	while(1){
@@ -166,8 +195,12 @@ void displayFloat(float number){
 		} else {
 			currentIter = 0;
 		}
+		
+		if(hasInterrupted){
+			hasInterrupted = 0; 
+			break;
+		}
 	}
-	
 }
 
 void displayError(){
@@ -175,11 +208,15 @@ void displayError(){
 		displayOneDigit(0x4F, 0b00001000);
 		displayOneDigit(0x05, 0b00000100);
 		displayOneDigit(0x05, 0b00000010);
+		if(hasInterrupted){
+			hasInterrupted = 0;
+			break;
+		}
 	}
 }
 
 void displayOneDigit(int digit, int display){
 	PORTB = ~display;
 	PORTD = ~digit;
-	_delay_ms(10);
+	_delay_ms(5);
 }
