@@ -31,7 +31,10 @@ dx = 0.01;		// delta
 It is self explainatory. dx is just a step. For example in rectangular rule from 0 to 1 and dx 0.01 you will have 100 small rectangles. 
 The more rectangles you have. The longer it takes to calculate. However due to implementation limits and floating point error, result will never be exact.
 
-If you want to change the function or parameters you need to change them directly in code. Recompile and program ATMega controller. 
+If you want to change the function or parameters you need to push certain buttons on keypad:
+- S4 button: Rectangle Rule
+- S3 button: Trapezoidal Rule
+- S2 button: Simpson's Rule 
 
 ## 3. Functions
 1. `void initialize()` - initializes ports so port B and D can be outputs.
